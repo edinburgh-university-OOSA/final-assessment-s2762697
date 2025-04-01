@@ -30,16 +30,6 @@ def chooseArg():
 
 class plotLVIS(lvisGround):
   '''A class, ineriting from lvisground (from processLVIS) and a plotting method'''
-  
-  def reprojectLVIS(self,outEPSG):
-    '''Reproject the data'''
-    #set projections as direct strings
-    inEPSG = "EPSG:4326"
-    outEPSG = f"EPSG: {outEPSG}"
-    #use transformer so dont deprecate with transform
-    transformer = Transformer.from_crs(inEPSG, outEPSG, always_xy=True) #always long,lat order
-    #reproject
-    self.x, self.y = transformer.transform(self.lon, self.lat)
 
   def plotSingleWave(self, index, save_path='Outputs/Waveform.png'):
     '''Plot single waveform if it exiss and exports as a png'''
@@ -57,7 +47,7 @@ class plotLVIS(lvisGround):
 
   def makeDEM(self, resolution, tiffName):
     '''convert data to a goetiff (from tiffExample.py)'''
-    #change filename
+    # call function from tiffExample.py
     writeTiff(data=self.zG, x=self.x, y=self.y, res=resolution, filename=tiffName, epsg=3031)
     return 
 
@@ -67,7 +57,7 @@ class plotLVIS(lvisGround):
 if __name__=="__main__":
   '''Main block'''
 
-  #start tracking RAM
+  # start tracking RAM
   tracemalloc.start()
 
   command = chooseArg()
@@ -79,14 +69,14 @@ if __name__=="__main__":
   #filelist_2015 = glob('/geos/netdata/oosa/assignment/lvis/2015/*.h5')  #only.h5 files
   #print(filelist_2015)
 
-  #file over Pine Island Glacier used in Task 1 and Task 2
+  # file over Pine Island Glacier used in Task 1 and Task 2
   filename='/geos/netdata/oosa/assignment/lvis/2009/ILVIS1B_AQ2009_1020_R1408_058456.h5'  #pine yay 
 
 ##############################################
-  #find bounds
+  # find bounds
   b=plotLVIS(filename,onlyBounds=True)    #first index in list
   
-  #loop for tile subdivisions 
+  # loop for tile subdivisions 
   subset_size = 3 #check what this means 
   x_step = (b.bounds[2]-b.bounds[0])/subset_size  #x length/20 #update
   y_step = (b.bounds[3]-b.bounds[1])/subset_size  #y length/20
@@ -102,7 +92,7 @@ if __name__=="__main__":
       # check bounds
       print(f'Tile {tile_number} has subset bounds {x0:.3f},{y0:.3f} to {x1:.3f},{y1:.3f}')
       
-      #all inside loop
+      # all inside loop
       # read in all data within our spatial subset
       lvis=plotLVIS(filename,minX=x0,minY=y0,maxX=x1,maxY=y1, setElev=True)   #read in elev
 
@@ -114,8 +104,8 @@ if __name__=="__main__":
       # Make DEM as a geotiff
       lvis.reprojectLVIS(3031)  # call reproject function -move to process
       lvis.estimateGround()     # call find ground function
-      tiffName = f"Data/lvisDEM_PIG{tile_number}.tif"   #filename with coords
-      #lvis.makeDEM(30, tiffName)       #resolution 
+      tiffName = f"../Data/lvisDEM_PIG{tile_number}.tif"   #filename with tile identifier
+      lvis.makeDEM(100, tiffName)       #resolution 
 
       # tile counter at end of loop
       tile_number +=1   #after it is called
@@ -131,4 +121,3 @@ if __name__=="__main__":
   peak_GB = peak/(1024**3)
   print(f'Peak memory used was: {peak_GB:.2f} GB')
   #print(current,peak)
-
