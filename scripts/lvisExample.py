@@ -61,6 +61,7 @@ class plotLVIS(lvisGround):
     writeTiff(data=self.zG, x=self.x, y=self.y, res=resolution, filename=tiffName, epsg=3031)
     return 
 
+# change back to zgravity
 ##########################################
 
 if __name__=="__main__":
@@ -83,7 +84,6 @@ if __name__=="__main__":
 
 ##############################################
   #find bounds
-  #b=plotLVIS(filelist_2009[0],onlyBounds=True)    #first index in list
   b=plotLVIS(filename,onlyBounds=True)    #first index in list
   
   #loop for tile subdivisions 
@@ -91,39 +91,44 @@ if __name__=="__main__":
   x_step = (b.bounds[2]-b.bounds[0])/subset_size  #x length/20 #update
   y_step = (b.bounds[3]-b.bounds[1])/subset_size  #y length/20
 
+  tile_number = 1   # first tile is 1
+
   for i in range(subset_size):    #loop for x axis
     for j in range(subset_size):    #loop for y axis
       x0=b.bounds[0] + i * x_step   #fist x
       y0=b.bounds[1] + j * y_step   #first y
       x1 = x0 + x_step    #end x
       y1 = y0 + y_step    #end y  
-      #check bounds
-      print(f'Subset bounds{x0, y0} to {x1, y1}')
+      # check bounds
+      print(f'Tile {tile_number} has subset bounds {x0:.3f},{y0:.3f} to {x1:.3f},{y1:.3f}')
       
-
       #all inside loop
       # read in all data within our spatial subset
       lvis=plotLVIS(filename,minX=x0,minY=y0,maxX=x1,maxY=y1, setElev=True)   #read in elev
-      #lvis=plotLVIS(filelist_2009[0],minX=x0,minY=y0,maxX=x1,maxY=y1, setElev=True)
-      lvis.plotSingleWave(index=command.index, save_path=command.output)
+
       # check that it contains some data
       if(lvis.nWaves==0):
+        tile_number +=1   #if no data still need to add
         continue
 
       # Make DEM as a geotiff
       lvis.reprojectLVIS(3031)  # call reproject function -move to process
       lvis.estimateGround()     # call find ground function
-      tiffName = f"Data/lvisDEM_PIGloop_{x0, y0}.tif"   #filename with coords
+      tiffName = f"Data/lvisDEM_PIG{tile_number}.tif"   #filename with coords
       #lvis.makeDEM(30, tiffName)       #resolution 
+
+      # tile counter at end of loop
+      tile_number +=1   #after it is called
 
   # Outside loop
   # call function to plot single waveform
-  lvis.plotSingleWave(index=command.index, save_path=command.output)
+  lvis.plotSingleWave(index=command.index)
 
   print(f'Each geotiff is split into {subset_size} x {subset_size} tiles') 
-    
-  #current, peak = tracemalloc.get_traced_memory() #both needed as returns a tuple
-  #peak_GB = peak/(1024**3)
-  #print(f'Peak memory used was: {peak_GB:.2f} GB')
+  
+  # Memory tracking
+  current, peak = tracemalloc.get_traced_memory() #both needed as returns a tuple
+  peak_GB = peak/(1024**3)
+  print(f'Peak memory used was: {peak_GB:.2f} GB')
   #print(current,peak)
 
