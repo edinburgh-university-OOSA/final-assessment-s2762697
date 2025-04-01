@@ -25,7 +25,6 @@ class lvisData(object):
     if(setElev):     # to save time, only read elev if wanted
       self.setElevations()
 
-
   ###########################################
 
   def readLVIS(self,filename,minX,minY,maxX,maxY,onlyBounds):
@@ -100,7 +99,7 @@ class lvisData(object):
     '''
     if 0 <= ind < self.nWaves:
       return(self.z[ind],self.waves[ind])
-    else:
+    else:   # change this
       raise IndexError("The selected index does not have any waveform data")
 
   ###########################################
@@ -117,8 +116,7 @@ class lvisData(object):
      '''
      Dump bounds
      '''
-     return[np.min(self.lon),np.min(self.lat),np.max(self.lon),np.max(self.lat)]  # this returns a list
-                                                                                  # rather than a tuple ()
+     return[np.min(self.lon),np.min(self.lat),np.max(self.lon),np.max(self.lat)]  # this returns a list instead of tuple
 
 ###########################################
 
