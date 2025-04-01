@@ -5,13 +5,26 @@
 
 import numpy as np
 from lvisClass import lvisData
-from scipy.ndimage.filters import gaussian_filter1d 
+from scipy.ndimage.filters import gaussian_filter1d
+from pyproj import Transformer 
 
 #######################################
 
 class lvisGround(lvisData):
   ''' LVIS class with extra processing steps
   to allow it to found the ground over ice''' ##update
+
+  #######################################################
+
+  def reprojectLVIS(self,outEPSG):
+    '''Reproject the data'''
+    #set projections as direct strings
+    inEPSG = "EPSG:4326"
+    outEPSG = f"EPSG: {outEPSG}"
+    #use transformer so dont deprecate with transform
+    transformer = Transformer.from_crs(inEPSG, outEPSG, always_xy=True) #always long,lat order
+    #reproject
+    self.x, self.y = transformer.transform(self.lon, self.lat)
 
   #######################################################
 
