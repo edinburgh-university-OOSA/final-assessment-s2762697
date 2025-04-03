@@ -134,7 +134,8 @@ output_tiff = os.path.join(output_folder, command.tiff_output)
 # call functions
 get_tiff = HandleTiff()
 get_tiff.merge_tiles(tiles_dir2009, output_tiff)
-get_tiff.visualise_tiff(output_tiff)
+plot_filename = output_tiff.replace('.tif', '.png')
+get_tiff.visualise_tiff(output_tiff, plot_filename)
 
 # Memory tracking
 current, peak = tracemalloc.get_traced_memory() #both needed as returns a tuple
