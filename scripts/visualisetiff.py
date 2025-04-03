@@ -51,7 +51,7 @@ class HandleTiff:
 
         print(f'Merged DEM is saved as {output_path}')
 
-    def visualise_tiff(self, tiff_path):
+    def visualise_tiff(self, tiff_path,plot_filename):
         # open the tiff to visualise with rasterio
         dataset = rasterio.open(tiff_path)
         # print raster dimensions
@@ -61,11 +61,12 @@ class HandleTiff:
         merged_image = dataset.read(1)  #read band
 
         # make plot
-        plt.figure(figsize=(5,8))
+        plt.figure(figsize=(6,10))
         plt.imshow(merged_image, cmap='cividis')
         plt.colorbar(label='Elevation (m)')      # legend
         plt.xlabel('Metres', fontsize=14)
         plt.ylabel('Metres', fontsize=14)
         plt.xticks(fontsize=12)
         plt.yticks(fontsize=12)
+        plt.savefig(plot_filename, dpi=300, bbox_inches='tight')
         plt.show()
