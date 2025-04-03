@@ -61,8 +61,11 @@ class HandleTiff:
         merged_image = dataset.read(1)  #read band
 
         # make plot
+        plt.figure(figsize=(5,8))
         plt.imshow(merged_image, cmap='cividis')
         plt.colorbar(label='Elevation (m)')      # legend
-        plt.xlabel('metres')
-        plt.ylabel('metres')
+        plt.xlabel('Metres', fontsize=14)
+        plt.ylabel('Metres', fontsize=14)
+        plt.xticks(fontsize=12)
+        plt.yticks(fontsize=12)
         plt.show()
