@@ -1,8 +1,85 @@
-# OOSA Assignment 2025
+## OOSA Final Assignment.
 
-This contains the files needed for the 2025 OOSA assignment. The raw LVIS data can be downloaded from [here](https://lvis.gsfc.nasa.gov/Data/Data_Download.html), but files over the Pine Island Glacier have been provided on the teaching drive.  We will be using files from [Operation IceBridge](https://www.nasa.gov/mission_pages/icebridge/index.html), which bridged the gap between ICESat and ICESat-2 using aircraft.
+This library uses the raw Land, Vegetetaion and Ice Sensor (LVIS) data ([link](https://lvis.gsfc.nasa.gov/Data/Data_Download.html)) via _geosnetdata_, from Operation IceBridge to process and create raster DEMs from the 20th October 2009 and 17th October 2015.
+
+**The repository is organised as follows:**
+
+```
+│── source/
+│   │── lvisClass.py
+│   │── processLVIS.pyV
+│   │── handleTiff.py
+│── DATA 2009/
+│── Data2015/
+│── Outputs/
+│── Task1.py
+│── Task2.py
+│── Task3.py
+│── README.md
+```
+-	**Source:** Contains multiple files that are required to complete the specified tasks.
+-	**Data2009:** A folder where the 2009 tiled rasters are stored when being processed.
+-	**Data 2015:** A folder where the 2015 tiled rasters are stored when being processed.
+-	**Outputs:** A folder where the final outputs are stored. This includes the waveform.png, single file DEM and full DEMs for both 2009 and 2015.
+-	**TasksX** run each specifed task.
+-	README file.
+-----
+### Libraries Required: 
+The follwowing libraries are required for the scripts to run:
+-	NumPy: For array operations such as data cleaning, transformation and aggregation.
+-	h5py: to read and write HDF5 files. 
+-	Matplotlib: For formatting and displaying the plots.
+-	os: For file system operations.
+-	rasterio (and rasterio.merge): For reading, writing and handling rasters.
+-	osgeo (gdal and osr): For handling geotiff data and managing projections.
+-	pyproj (Transformer): For coordinate system transformations.
+-	Glob (Glob): For iterating through multiple files in a folder.
+-	argparse: For handling command line options.
+-	Tracemalloc: For tracking memory during script use.
+
+To install:
+```
+    pip install GDAL numpy h5py matplotlib rasterio pyproj
+```
+-----------
+### Running The Code:
+**Install the github repo**
+To clone the repository:
+```
+    git clone etc...
+```
+**Task 1:**
+
+To run:
+```
+    python Task1.py --i (chosen index) --output (Example.png)
+```  
+1. This script reads the specifed file and creates a plot of _one waves'_ full LiDAR return data (amplitude). 
+2. If chosen index contains data, this saves the plot to the Output folder.
+3. pic of output?
+
+**Task 2:**
+
+To run:
+```
+    python Task2.py --res (res) --tiff_output (Example.tif)
+```
+1. This script creates subset tiles and loops through (for one file) and converts the tiles into rasters of a chosen resolution.
+2. These rasters are stored in a folder (Data2009) and then merged into one TIF. file.
+3. 
+4.
+
+  
+**Task 3:**
+
+**Task 4:**
+
+**Task 5:**
 
 
+----------------
+References:!?
+==============================
 ## lvisClass.py
 
 A class to handle LVIS data. This class reads in LVIS data from a HDF5 file, stores it within the class. It also contains methods to convert from the compressed elevation format and return attributes as numpy arrays. Note that LVIS data is stored in WGS84 (EPSG:4326).
